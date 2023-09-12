@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head th:replace="head :: head">
+</head>
+<body>
+<div th:replace="header :: header">
+</div>
+
+<div class="container mt-4 mb-4 pt-4" style="min-height: 700px;">
+    <div class="row g-3 m-2" style="min-height: 600px;">
+        <div class="col-sm-2 card border m-2" style="width:200px;">
+            <div th:replace="userProfileFragment::userProfileSidebar"></div>
+        </div>
+        <div class="col-sm-9 card border m-2">
+            <div th:replace="userProfileFragment::userProfileUserList"></div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="footer :: footer">
+</div>
+</body>
+</html>

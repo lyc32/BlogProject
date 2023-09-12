@@ -1,0 +1,33 @@
+#alertMessage
+{
+    position: fixed;
+    top: 40%;
+    left: 40%;
+    right: 40%;
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    font-size: 20px;
+    text-align: center;
+    z-index: 9999;
+    display: none;
+}
+
+.progress{
+    height: 5px;
+    bottom: 0px;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.progress .progress-bar
+{
+    bottom: 0px;
+    position: relative;
+    animation: animate-positive 2s;
+}
+
+@-webkit-keyframes animate-positive {
+    0% { width: 0%;}
+}
+

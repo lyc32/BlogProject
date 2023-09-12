@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head th:replace="head :: head">
+</head>
+<body>
+<div th:replace="header :: header">
+</div>
+
+<div class="container mt-4 mb-4 pt-4 text-center" style="min-height: 700px;">
+    <div class="card text-center">
+        <div class="card-header"> <h3 class="card-title text-center">Blog</h3> </div>
+        <div class="card-body" style="min-height: 550px;">
+            <div class="table-responsive">
+                <table class="table table-sm table-hover table-dark">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col-sm-1"><h4>#</h4></th>
+                        <th scope="col-sm-1"><h4>Date</h4></th>
+                        <th scope="col-sm-6"><h4>Title</h4></th>
+                        <th scope="col-sm-2"><h4>Author</h4></th>
+                        <th scope="col-sm-2"><h4>Feedback</h4></th>
+                    </tr>
+                    </thead>
+                    <tbody th:each="blog : ${blogs}">
+                    <tr>
+                        <td><a class="link-secondary" th:href="@{/blog/{id}(id=${blog.id})}"><h5 th:text="${blog.id}"></h5></a></td>
+                        <td><a class="link-secondary" th:href="@{/blog/{id}(id=${blog.id})}"><h5 th:text="${blog.date}"></h5></a></td>
+                        <td><a class="link-secondary" th:href="@{/blog/{id}(id=${blog.id})}"><h5 th:text="${blog.title}"></h5></a></td>
+                        <td><a class="link-secondary" th:href="@{/blog/{id}(id=${blog.id})}"><h5 th:text="${blog.author}"></h5></a></td>
+                        <td>
+                            <a class="link-secondary text-decoration-none" th:href="@{/blog/{id}(id=${blog.id})}">
+                                <i class="fa fa-thumbs-o-up p-2" aria-hidden="true" style="font-size:24px" th:text="${' ' + blog.thumbUp}"></i>
+                                <i class="fa fa-thumbs-o-down p-2" aria-hidden="true" style="font-size:24px" th:text="${' ' + blog.thumbDown}"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer text-body-secondary">
+            <-prev ... next->
+        </div>
+    </div>
+</div>
+
+<div th:replace="footer :: footer">
+</div>
+</body>
+</html>

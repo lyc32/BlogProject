@@ -1,0 +1,435 @@
+<div class="card-body text-center" th:fragment="userProfileSidebar">
+    <h3 class="card-title text-center border-bottom pb-4">My Profile</h3>
+    <p class="card-text">
+    <div class="row g-3">
+        <div class="col-sm-12 border-bottom">
+            <a class="col-form-label h3" href="/myInfo">Info</a>
+        </div>
+        <div class="col-sm-12 border-bottom">
+            <a class="col-form-label h3" href="/myPhone">Phone</a>
+        </div>
+        <div class="col-sm-12 border-bottom">
+            <a class="col-form-label h3" href="/myEmail">E-mail</a>
+        </div>
+        <div class="col-sm-12 border-bottom">
+            <a class="col-form-label h3" href="/resetPassword">Password</a>
+        </div>
+        <div class="col-sm-12 border-bottom">
+            <a class="col-form-label h3" href="/myBlog">My Blog</a>
+        </div>
+        <div class="col-sm-12 border-bottom">
+            <a class="col-form-label h3" href="/postBlog">Post Blog</a>
+        </div>
+        <div class="col-sm-12 border-bottom" th:if="${user.role} eq 'admin'">
+            <a class="col-form-label h3" href="/userBlog">User Blog</a>
+        </div>
+        <div class="col-sm-12 border-bottom" th:if="${user.role} eq 'admin'">
+            <a class="col-form-label h3" href="/userList">User List</a>
+        </div>
+    </div>
+    </p>
+</div>
+
+<div class="card-body text-center" th:fragment="userProfileBlog">
+    <div class="row g-0">
+        <div class="card-body">
+            <h3 class="card-title text-center border-bottom  pb-4" th:if="${blog.id == 0}">Post New Blog</h3>
+            <h3 class="card-title text-center border-bottom  pb-4" th:if="${blog.id != 0}">Update Blog</h3>
+            <form id="postBlogForm" class="row">
+                <input type="hidden" name="id" id="id" th:value="${blog.id}">
+                <input type="hidden" name="userId" id="userId" th:if="${blog.id == 0}" th:value="${user.user_id}">
+                <input type="hidden" name="author" id="author" th:if="${blog.id == 0}" th:value="${user.firstName + ' ' + user.lastName}">
+                <input type="hidden" name="userId" id="userId" th:if="${blog.id != 0}" th:value="${blog.userId}">
+                <input type="hidden" name="author" id="author" th:if="${blog.id != 0}" th:value="${blog.author}">
+                <p class="card-text pt-0">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <input type="text" class="form-control" name="title" id="title" th:value="${blog.title}" required>
+                    </div>
+                </div>
+                <div class="row pt-2">
+                    <div class="col-sm-12">
+                        <textarea class="form-control" style="height:250px" name="blog" id="blog" th:text="${blog.blog}" required></textarea>
+                    </div>
+                </div>
+                </p>
+            </form>
+            <p class="card-text">
+            <div class="col-sm-12 border-top text-end pt-4">
+                <button class="btn btn-primary mb-3 btn-lg py-1 px-5 ms-4" onclick="postBlog()" th:if="${blog.id == 0}">Post</button>
+                <button class="btn btn-primary mb-3 btn-lg py-1 px-5 ms-4" onclick="updateBlog()" th:if="${blog.id != 0}">Update</button>
+                <button class="btn btn-primary mb-3 btn-lg py-1 px-5 ms-4" onclick="deleteBlog()" th:if="${blog.id != 0}">Delete</button>
+            </div>
+            <div id="errorMessage">
+            </div>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="card-body" th:fragment="userProfileInfo">
+    <h3 class="card-title text-center p-4" th:text="${ 'User ID:' + user.user_id}"></h3>
+    <div class="row g-3 border-top">
+        <div class="col-sm-5">
+            <div class="row pt-2 pb-2">
+                <div class="col-sm-6 text-end">
+                    <label class="col-form-label"><h5>User Name:</h5></label>
+                </div>
+                <div class="col-sm-6">
+                    <label class="col-form-label"><h5 th:text="${user.firstName + ' ' + user.lastName}"></h5></label>
+                </div>
+            </div>
+            <div class="row pt-2 pb-2">
+                <div class="col-sm-6 text-end">
+                    <label class="col-form-label"><h5>Account Type:</h5></label>
+                </div>
+                <div class="col-sm-6">
+                    <label class="col-form-label"><h5 th:text="${user.role}"></h5></label>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="row pt-2 pb-2">
+                <div class="col-sm-4 text-end">
+                    <label class="col-form-label"><h5>Phone:</h5></label>
+                </div>
+                <div class="col-sm-8">
+                    <label class="col-form-label"><h5 th:text="${user.phone}"></h5></label>
+                </div>
+            </div>
+            <div class="row pt-2 pb-2">
+                <div class="col-sm-4 text-end">
+                    <label class="col-form-label"><h5>E-mail:</h5></label>
+                </div>
+                <div class="col-sm-8">
+                    <label class="col-form-label"><h5 th:text="${user.email}"></h5></label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row border-top">
+        <div class="col-sm-6 text-end">
+            <i class="fa fa-thumbs-o-up p-2" aria-hidden="true" style="font-size:36px" th:text="${' ' +thumbUp}"></i>
+        </div>
+        <div class="col-sm-6 text-start">
+            <i class="fa fa-thumbs-o-down p-2" aria-hidden="true" style="font-size:36px" th:text="${' ' +thumbDown}"></i>
+        </div>
+    </div>
+</div>
+
+<div class="card-body" th:fragment="userProfileEmail">
+    <h3 class="card-title text-center p-4">Update Your E-mail</h3>
+    <div class="row g-3">
+        <form id="updateEmailForm">
+            <input type="hidden" name="user_id" id="user_id" th:value="${user.user_id}">
+            <div class="row pt-4 pb-4 border-top border-bottom">
+                <div class="col-sm-12">
+                    <div class="row pb-4">
+                        <div class="col-sm-4 text-end">
+                            <label class="col-form-label">Your Current Email:</label>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="oldEmail" id="oldEmail" th:value="${user.email}" readonly>
+                        </div>
+                    </div>
+                    <div class="row pb-4">
+                        <div class="col-sm-4 text-end">
+                            <label class="col-form-label">New Email:</label>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="email" id="email" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="row pt-4">
+            <div class="col-sm-11 text-end">
+                <button class="btn btn-primary mb-3 btn-lg py-1 px-5 ms-4" onclick="updateEmail()">update</button>
+            </div>
+            <div class="col-sm-12" id="errorMessage">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card-body" th:fragment="userProfilePhone">
+    <h3 class="card-title text-center p-4">Update Your Phone Number</h3>
+    <div class="row g-3">
+        <form id="updatePhoneForm">
+            <input type="hidden" name="user_id" id="user_id" th:value="${user.user_id}">
+            <div class="row pt-4 pb-4 border-top border-bottom">
+                <div class="col-sm-12">
+                    <div class="row pb-4">
+                        <div class="col-sm-4 text-end">
+                            <label class="col-form-label">Your Current Phone:</label>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="oldPhone" id="oldPhone" th:value="${user.phone}" readonly>
+                        </div>
+                    </div>
+                    <div class="row pb-4">
+                        <div class="col-sm-4 text-end">
+                            <label class="col-form-label">New Phone:</label>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="phone" id="phone" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="row pt-4">
+            <div class="col-sm-11 text-end">
+                <button class="btn btn-primary mb-3 btn-lg py-1 px-5 ms-4" onclick="updatePhone()">update</button>
+            </div>
+            <div class="col-sm-12" id="errorMessage">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card-body" th:fragment="userProfilePassword">
+    <h3 class="card-title text-center p-4">Reset Password</h3>
+    <div class="row g-3">
+        <form id="updatePasswordForm">
+            <input type="hidden" name="user_id" id="user_id" th:value="${user.user_id}">
+            <input type="hidden" name="column" value="Password">
+            <div class="row pt-4 pb-4 border-top border-bottom">
+                <div class="col-sm-12">
+                    <div class="row pb-4">
+                        <div class="col-sm-4 text-end">
+                            <label class="col-form-label">Current Password:</label>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="password" class="form-control" name="oldPassword" id="oldPassword" required>
+                        </div>
+                    </div>
+                    <div class="row pb-4">
+                        <div class="col-sm-4 text-end">
+                            <label class="col-form-label">New Password:</label>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="password" class="form-control" name="password" id="password" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 text-end">
+                            <label class="col-form-label">Confirm Password:</label>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="password" class="form-control" name="confirm" id="confirm" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+            <div class="row pt-4">
+                <div class="col-sm-11 text-end">
+                    <button class="btn btn-primary mb-3 btn-lg py-1 px-5 ms-4" onclick="updatePassword()">update</button>
+                </div>
+                <div class="col-sm-12" id="errorMessage">
+                </div>
+            </div>
+    </div>
+</div>
+
+<div class="card-body" th:fragment="userProfileMyBlog">
+    <h3 class="card-title text-center p-4">My Blog</h3>
+    <div class="row g-3">
+        <div class="card-body border-top" style="min-height: 400px;">
+            <div class="table-responsive">
+                <table class="table table-sm table-hover table-dark">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col-sm-1"><h4>#</h4></th>
+                        <th scope="col-sm-1"><h4>Date</h4></th>
+                        <th scope="col-sm-7"><h4>Title</h4></th>
+                        <th scope="col-sm-3"><h4>Feedback</h4></th>
+                    </tr>
+                    </thead>
+                    <tbody th:each="blog : ${blogs}">
+                    <tr>
+                        <td><a class="link-secondary" th:href="@{/myBlog/{id}(id=${blog.id})}"><h5 th:text="${blog.id}"></h5></a></td>
+                        <td><a class="link-secondary" th:href="@{/myBlog/{id}(id=${blog.id})}"><h5 th:text="${blog.date}"></h5></a></td>
+                        <td><a class="link-secondary" th:href="@{/myBlog/{id}(id=${blog.id})}"><h5 th:text="${blog.title}"></h5></a></td>
+                        <td>
+                            <a class="link-secondary text-decoration-none" th:href="@{/myBlog/{id}(id=${blog.id})}">
+                                <i class="fa fa-thumbs-o-up p-2" aria-hidden="true" style="font-size:24px" th:text="${'' + blog.thumbUp}"></i>
+                                <i class="fa fa-thumbs-o-down p-2" aria-hidden="true" style="font-size:24px" th:text="${'' + blog.thumbDown}"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer text-body-secondary">
+            <-prev ... next->
+        </div>
+    </div>
+</div>
+
+<div class="card-body" th:fragment="userProfileUserBlog">
+    <h3 class="card-title text-center p-4">User Blog List</h3>
+    <div class="row g-3">
+        <div class="card-body border-top" style="min-height: 400px;">
+            <div class="table-responsive">
+                <table class="table table-sm table-hover table-dark">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col-sm-1"><h4>#</h4></th>
+                        <th scope="col-sm-1"><h4>Date</h4></th>
+                        <th scope="col-sm-8"><h4>Title</h4></th>
+                        <th scope="col-sm-2"><h4>Author</h4></th>
+                    </tr>
+                    </thead>
+                    <tbody th:each="blog : ${blogs}">
+                    <tr>
+                        <td><a class="link-secondary" th:href="@{/userBlog/{id}(id=${blog.id})}"><h5 th:text="${blog.id}"></h5></a></td>
+                        <td><a class="link-secondary" th:href="@{/userBlog/{id}(id=${blog.id})}"><h5 th:text="${blog.date}"></h5></a></td>
+                        <td><a class="link-secondary" th:href="@{/userBlog/{id}(id=${blog.id})}"><h5 th:text="${blog.title}"></h5></a></td>
+                        <td><a class="link-secondary" th:href="@{/userBlog/{id}(id=${blog.id})}"><h5 th:text="${blog.author}"></h5></a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer text-body-secondary">
+            <-prev ... next->
+        </div>
+    </div>
+</div>
+
+<div class="card-body text-center" th:fragment="userProfileUserBlogView">
+    <div class="row g-0">
+        <div class="card-body">
+            <h3 class="card-title text-center border-bottom  pb-4">Check Blog</h3>
+            <form id="userBlogForm" class="row">
+                <input type="hidden" name="id" id="id" th:value="${blog.id}">
+                <input type="hidden" name="userId" id="userId" th:value="${blog.userId}">
+                <input type="hidden" name="author" id="author" th:value="${blog.author}">
+                <p class="card-text pt-0">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <input type="text" class="form-control" name="title" id="title" th:value="${blog.title}" readonly>
+                    </div>
+                </div>
+                <div class="row pt-2">
+                    <div class="col-sm-12">
+                        <textarea class="form-control" style="height:250px" name="blog" id="blog" th:text="${blog.blog}" readonly></textarea>
+                    </div>
+                </div>
+                </p>
+            </form>
+            <p class="card-text">
+            <div class="col-sm-12 border-top text-end pt-4">
+                <button class="btn btn-primary mb-3 btn-lg py-1 px-5 ms-4" onclick="adminDeleteBlog()">Delete</button>
+            </div>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="card-body" th:fragment="userProfileUserList">
+    <h3 class="card-title text-center p-4">User List</h3>
+    <div class="row g-3">
+        <div class="card-body border-top" style="min-height: 400px;">
+            <div class="table-responsive">
+                <table class="table table-sm table-hover table-dark">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col-sm-1"><h4>#</h4></th>
+                        <th scope="col-sm-3"><h4>UserName</h4></th>
+                        <th scope="col-sm-4"><h4>PhoneNumber</h4></th>
+                        <th scope="col-sm-4"><h4>E-mail</h4></th>
+                    </tr>
+                    </thead>
+                    <tbody th:each="user : ${userList}">
+                    <tr>
+                        <td><a class="link-secondary" th:href="@{/userList/{id}(id=${user.user_id})}"><h5 th:text="${user.user_id}"></h5></a></td>
+                        <td><a class="link-secondary" th:href="@{/userList/{id}(id=${user.user_id})}"><h5 th:text="${user.firstName + ' ' + user.lastName }"></h5></a></td>
+                        <td><a class="link-secondary" th:href="@{/userList/{id}(id=${user.user_id})}"><h5 th:text="${user.phone}"></h5></a></td>
+                        <td><a class="link-secondary" th:href="@{/userList/{id}(id=${user.user_id})}"><h5 th:text="${user.email}"></h5></a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer text-body-secondary">
+            <-prev ... next->
+        </div>
+    </div>
+</div>
+
+<div class="card-body text-center" th:fragment="userProfileUserView">
+
+    <div class = "row pb-0">
+        <div class="col-sm-6 text-end">
+            <h3 class="card-title">User ID:</h3>
+        </div>
+        <div class="col-sm-5 text-start">
+            <h3 class="card-title" th:text="${tUser.user_id}"></h3>
+        </div>
+        <div class="col-sm-1 text-end">
+            <button class="btn btn-outline-danger btn-lg py-1 px-3" onclick="adminDeleteUser()">X</button>
+        </div>
+    </div>
+    <div class = "row pb-4">
+        <div class="col-sm-6 text-end">
+            <h3 class="card-title">User Name:</h3>
+        </div>
+        <div class="col-sm-6 text-start">
+            <h3 class="card-title" th:text="${tUser.firstName + ' ' + tUser.lastName}"></h3>
+        </div>
+    </div>
+
+    <div class="row g-3 border-top border-bottom">
+        <div class="row pt-4 pb-2">
+            <div class="col-sm-4 text-end">
+                <label class="col-form-label"><h5>Phone:</h5></label>
+            </div>
+            <div class="col-sm-5">
+                <form id="adminUpdatePhoneForm">
+                    <input type="hidden" name="user_id" id="user_id" th:value="${tUser.user_id}">
+                    <input type="text" class="form-control" name="phone" id="phone" th:value="${tUser.phone}" required>
+                </form>
+            </div>
+            <div class="col-sm-2">
+                <button class="btn btn-primary mb-3 btn-lg py-1 px-5 ms-4" th:onclick="'adminUpdatePhone('+${tUser.user_id}+')'">Update</button>
+            </div>
+        </div>
+        <div class="row pt-2 pb-2">
+            <div class="col-sm-4 text-end">
+                <label class="col-form-label"><h5>E-mail:</h5></label>
+            </div>
+            <div class="col-sm-5">
+                <form id="adminUpdateEmailForm">
+                    <input type="hidden" name="user_id" id="user_id" th:value="${tUser.user_id}">
+                    <input type="email" class="form-control" name="email" id="email" th:value="${tUser.email}" required>
+                </form>
+            </div>
+            <div class="col-sm-2">
+                <button class="btn btn-primary mb-3 btn-lg py-1 px-5 ms-4" th:onclick="'adminUpdateEmail('+${tUser.user_id}+')'">Update</button>
+            </div>
+        </div>
+        <div class="row pt-2 pb-2">
+            <div class="col-sm-4 text-end">
+                <label class="col-form-label"><h5>Password:</h5></label>
+            </div>
+            <div class="col-sm-5">
+                <form id="adminUpdatePasswordForm">
+                    <input type="hidden" name="user_id" id="user_id" th:value="${tUser.user_id}">
+                    <input class="form-control mb-2" type="password"  name="password"  id="password" placeholder="Password" required>
+                    <input class="form-control mb-2" type="password"  name="confirm"  id="confirm" placeholder="Confirm Password" required>
+                </form>
+            </div>
+            <div class="col-sm-2">
+                <button class="btn btn-primary mb-3 btn-lg py-1 px-5 ms-4" th:onclick="'adminUpdatePassword('+${tUser.user_id}+')'">Update</button>
+            </div>
+        </div>
+        <div class="col-sm-12" id="errorMessage">
+        </div>
+    </div>
+</div>
